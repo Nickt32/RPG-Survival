@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     public Transform gameCamera;
 
-    public float speed = 4.0f;
+    public float moveSpeed = 4.0f;
 
     // Update is called once per frame
     void Update()
@@ -52,8 +52,12 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        Vector3 direction = transform.forward * verticalInput + transform.right * horizontalInput;
 
+        Vector3 direction = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
+
+        transform.Translate(direction);
+
+        transform.Rotate(new Vector3(0,rotationalInput,0));
     }
 
 }

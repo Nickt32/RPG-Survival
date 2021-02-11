@@ -28,7 +28,9 @@ public class PlayerController : MonoBehaviour
 
         float verticalInput = Input.GetAxis("Vertical");
 
-        float rotationalInput = Input.GetAxis("MouseX");
+        float rotationalInputX = Input.GetAxis("MouseX");
+
+        float rotationalInputY = Input.GetAxis("MouseY");
 
         float rightTrigger = Input.GetAxis("RT");
 
@@ -53,11 +55,16 @@ public class PlayerController : MonoBehaviour
 
 
 
+
         Vector3 direction = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
 
         transform.Translate(direction);
 
-        transform.Rotate(new Vector3(0,rotationalInput,0));
+
+        gameCamera.transform.Rotate(new Vector3(rotationalInputY, 0, 0));
+
+
+        transform.Rotate(new Vector3(0, rotationalInputX, 0));
     }
 
 }

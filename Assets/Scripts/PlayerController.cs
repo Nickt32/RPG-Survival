@@ -33,11 +33,6 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        turnCamera();
-    }
-
-    public void turnCamera() { 
-    
     }
 
     private void Move()
@@ -96,6 +91,7 @@ public class PlayerController : MonoBehaviour
             moveSpeed *= jumpControl;
 
         }
+
         else
         {
             if(!running)
@@ -124,6 +120,7 @@ public class PlayerController : MonoBehaviour
 
             transform.Translate(direction);
         }
+
         else
         {
             animator.Play("Idle");

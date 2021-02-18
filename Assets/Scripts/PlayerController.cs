@@ -8,7 +8,13 @@ public class PlayerController : MonoBehaviour
 
     public Transform gameCamera;
 
-    public float moveSpeed = 4.0f;
+    public Animator animator;
+
+    public float moveSpeed;
+
+    public float turnSpeed = 2.0f;
+
+    public bool running = false;
 
     // Update is called once per frame
     void Update()
@@ -48,13 +54,52 @@ public class PlayerController : MonoBehaviour
 
         bool fire3 = Input.GetButtonDown("Fire3");
 
-        if(Input.GetButtonDown("ToggleMenu"))
+        bool leftToggle = Input.GetButtonDown("LeftToggle");
+
+        bool rightToggle = Input.GetButtonDown("RightToggle");
+
+        animator.SetLayerWeight(3,1);
+
+        if (leftToggle)
         {
-            print("Pressed");
+            print("LeftToggle pressed,");
+
+            if (running)
+            {
+                moveSpeed = 2.0f;
+
+                running = false;
+            }
+            else
+            {
+                moveSpeed = 8.0f;
+
+                running = true;
+            }
         }
 
+        if (verticalInput != 0)
+        {
+            if(running)
+            {
+                animator.Play("Run");
+            }
+            else
+            {
+                animator.Play("Walk");
+            }
+        }
+        else
+        {
+            animator.Play("Idle");
+        }
 
+        if (jump)
+        {
+            animator.Play("RoundKick");
+        }
 
+        
 
         Vector3 direction = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
 
@@ -64,7 +109,7 @@ public class PlayerController : MonoBehaviour
         gameCamera.transform.Rotate(new Vector3(rotationalInputY, 0, 0));
 
 
-        transform.Rotate(new Vector3(0, rotationalInputX, 0));
+        transform.Rotate(new Vector3(0, rotationalInputX * turnSpeed, 0));
     }
 
 }

@@ -10,11 +10,23 @@ public class PlayerController : MonoBehaviour
 
     public Animator animator;
 
-    public float moveSpeed;
+    private float moveSpeed;
+
+    public float defaultMoveSpeed = 5.0f;
+
+    public float runSpeed = 9.0f;
 
     public float turnSpeed = 2.0f;
 
     public bool running = false;
+
+    public float jumpPower = 6.0f;
+
+    private float jumpControl = 0.98f;
+
+    private bool grounded = true;
+
+    
 
     // Update is called once per frame
     void Update()
@@ -58,29 +70,48 @@ public class PlayerController : MonoBehaviour
 
         bool rightToggle = Input.GetButtonDown("RightToggle");
 
-        animator.SetLayerWeight(3,1);
+        
+        if (jump && grounded)
+        {
+            playerRb.AddForce(new Vector3(0,jumpPower,0), ForceMode.Impulse);
+
+            grounded = false;
+
+        }
 
         if (leftToggle)
         {
-            print("LeftToggle pressed,");
-
             if (running)
             {
-                moveSpeed = 2.0f;
-
                 running = false;
             }
             else
             {
-                moveSpeed = 8.0f;
-
                 running = true;
             }
         }
 
-        if (verticalInput != 0)
+        if (!grounded)
         {
-            if(running)
+            moveSpeed *= jumpControl;
+
+        }
+        else
+        {
+            if(!running)
+            {
+                moveSpeed = defaultMoveSpeed;
+            }
+            else
+            {
+                moveSpeed = runSpeed;
+            }
+
+        }
+
+        if (verticalInput != 0 || horizontalInput != 0) // if joystick is pressed
+        {
+            if (running) 
             {
                 animator.Play("Run");
             }
@@ -88,28 +119,29 @@ public class PlayerController : MonoBehaviour
             {
                 animator.Play("Walk");
             }
+
+            Vector3 direction = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
+
+            transform.Translate(direction);
         }
         else
         {
             animator.Play("Idle");
         }
 
-        if (jump)
-        {
-            animator.Play("RoundKick");
-        }
-
-        
-
-        Vector3 direction = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
-
-        transform.Translate(direction);
-
-
         gameCamera.transform.Rotate(new Vector3(rotationalInputY, 0, 0));
 
 
         transform.Rotate(new Vector3(0, rotationalInputX * turnSpeed, 0));
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Ground")
+        {
+            grounded = true;
+
+        }
     }
 
 }

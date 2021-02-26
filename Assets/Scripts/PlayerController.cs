@@ -116,14 +116,14 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Walk");
             }
 
-            Vector3 direction = new Vector3(horizontalInput, 0, verticalInput) * moveSpeed * Time.deltaTime;
+            Vector3 direction = new Vector3(horizontalInput * 0.7f, 0, verticalInput) * moveSpeed * Time.deltaTime;
 
             transform.Translate(direction);
         }
 
         else
         {
-            animator.Play("Idle");
+            animator.Play("RoundKick");
         }
 
         gameCamera.transform.Rotate(new Vector3(rotationalInputY, 0, 0));
